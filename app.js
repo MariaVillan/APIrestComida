@@ -1,11 +1,20 @@
 const express = require ("express")
+const morgan = require ("morgan")
 const app = express()
 const port = 3500
+const comidaRoute = require('./routes/comidaRoute')
 
+app.use(express.urlencoded({extended:false}))
+app.use(express.json());
 
-app.get("/", (req,res)=>{
-    res.json({mensaje: "Aplicación funcionando correctamente"})
-})
+app.use(morgan('dev'))
+
+app.use('/api', comidaRoute)
+
+app.use((req, res) => {
+    res.status(404).json({ message: 'Ruta no encontrada' });
+});
+
 app.listen(port,()=> {
     console.log(`Aplicacion corriendo por el puerto ${port}`)
 })
